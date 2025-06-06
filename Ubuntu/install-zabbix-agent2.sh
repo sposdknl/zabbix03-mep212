@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-echo "🔧 Instalace Zabbix Agent2 a pluginů..."
 
 # Instalace základních nástrojů
 sudo apt-get update
@@ -21,4 +20,3 @@ sudo apt-get install -y zabbix-agent2 zabbix-agent2-plugin-*
 sudo systemctl enable zabbix-agent2
 sudo systemctl stop zabbix-agent2
 
-echo "✅ Instalace dokončena."

@@ -10,29 +10,22 @@ Repository pro vyuku na SPOS DK
 - Vagrantfile obsahuje sekci pro aplikaci příkazů pro instalaci monitorovacího
 [Zabbix Agent2](https://www.zabbix.com/).
 
-### Instalace Zabbix Agent2
+### Změny Instalace Zabbix Agent2
 
 ```console
-wget https://repo.zabbix.com/zabbix/6.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_latest+ubuntu22.04_all.deb
-dpkg -i zabbix-release_latest+ubuntu22.04_all.deb
-
-apt-get update
-apt-get install -y zabbix-agent2 zabbix-agent2-plugin-*
-
-systemctl enable zabbix-agent2
-systemctl start zabbix-agent2
+sudo apt-get install -y net-tools wget gnupg2
+wget https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_7.0-1+ubuntu22.04_all.deb
 ```
 
-### Konfigurace Zabbix Agent2
+### Změny Konfigurace Zabbix Agent2
 
 ```console
-joe /etc/zabbix/zabbix_agent2.conf
-...
-Hostname=ubuntu-8e714c18
-Server=enceladus.pfsense.cz
-ServerActive=enceladus.pfsense.cz
-Timeout=30
-HostMetadata=SPOS
+if grep -q "^HostMetadata=" /etc/zabbix/zabbix_agent2.conf; then
+    sudo sed -i "s/^HostMetadata=.*/HostMetadata=SPOS/" /etc/zabbix/zabbix_agent2.conf
+else
+    echo "HostMetadata=SPOS" | sudo tee -a /etc/zabbix/zabbix_agent2.conf
+fi
+sudo diff -u /etc/zabbix/zabbix_agent2.conf-orig /etc/zabbix/zabbix_agent2.conf || true
 
 systemctl restart zabbix-agent2
 ```
